@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,33 +20,40 @@ import com.api.biblioteca.services.LivroService;
 @RestController
 @RequestMapping("/livros")
 public class LivroController {
-	
+
 	@Autowired
 	LivroService livroService;
-	
+
 	@GetMapping
-	public ResponseEntity<List<Livro>> listarLivros(){
+	public ResponseEntity<List<Livro>> listarLivros() {
 		return new ResponseEntity<>(livroService.listarLivros(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Livro> buscarPorId(Integer id){
-		return new ResponseEntity<>(livroService.buscarLivroPorId(id), HttpStatus.OK);
+	public ResponseEntity<Livro> buscarPorId(@PathVariable Integer id) {
+		Livro livro = livroService.buscarLivroPorId(id);
+
+		if (livro == null)
+			return new ResponseEntity<>(livro, HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<>(livro, HttpStatus.OK);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Livro> salvar(@RequestBody Livro livro){
+	public ResponseEntity<Livro> salvar(@RequestBody Livro livro) {
 		return new ResponseEntity<>(livroService.salvarLivro(livro), HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<Livro> atualizar(@RequestBody Livro livro){
+	public ResponseEntity<Livro> atualizar(@RequestBody Livro livro) {
 		return new ResponseEntity<>(livroService.atualizarLivro(livro), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping
-	public ResponseEntity<String> deletarLivro(@RequestBody Livro livro){
-		livroService.deletarLivro(livro);
-		return new ResponseEntity<>("Deletado com sucesso", HttpStatus.OK);
+	public ResponseEntity<String> deletarLivro(@RequestBody Livro livro) {
+		if(livroService.deletarLivro(livro))
+			return new ResponseEntity<>("Deletado com sucesso", HttpStatus.OK);
+		else
+			return new  ResponseEntity<>("Não foi possível deletar", HttpStatus.BAD_REQUEST);
 	}
-} 
+}

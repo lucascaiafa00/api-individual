@@ -19,7 +19,7 @@ public class EditoraService {
 	}
 	
 	public Editora buscarEditoraPorId(Integer id) {
-		return editoraRepository.findById(id).get();
+		return editoraRepository.findById(id).orElse(null);
 	}
 	
 	public Editora salvarEditora(Editora editora) {
@@ -30,7 +30,22 @@ public class EditoraService {
 		return editoraRepository.save(editora);
 	}
 	
-	public void deletarEditora(Editora editora) {
+	public Boolean deletarEditora(Editora editora) {
+		if(editora == null)
+			return false;
+		
+		Editora editoraExistente = buscarEditoraPorId(editora.getCodigoEditora());
+		
+		if(editoraExistente == null)
+			return false;
+		
 		editoraRepository.delete(editora);
+		
+		Editora editoraContinuaExistindo = buscarEditoraPorId(editora.getCodigoEditora());
+		
+		if(editoraContinuaExistindo == null)
+			return true;
+		
+		return false;
 	}
 }

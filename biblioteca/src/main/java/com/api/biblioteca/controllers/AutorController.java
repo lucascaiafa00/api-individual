@@ -14,44 +14,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.biblioteca.entities.Aluno;
-import com.api.biblioteca.services.AlunoService;
+import com.api.biblioteca.entities.Autor;
+import com.api.biblioteca.services.AutorService;
 
 @RestController
-@RequestMapping("/alunos")
-public class AlunoController {
+@RequestMapping("/autores")
+public class AutorController {
 	
 	@Autowired
-	AlunoService alunoService;
+	AutorService autorService;
 	
 	@GetMapping
-	public ResponseEntity<List<Aluno>> listarAlunos(){
-		return new ResponseEntity<>(alunoService.listarAlunos(), HttpStatus.OK);
+	public ResponseEntity<List<Autor>> listarAutores(){
+		return new ResponseEntity<>(autorService.listarAutores(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Aluno> buscarPorId(@PathVariable Integer id){
-		Aluno aluno = alunoService.buscarAlunoPorId(id);
+	public ResponseEntity<Autor> buscarPorId(@PathVariable Integer id){
+		Autor autor = autorService.buscarAutorPorId(id);
 		
-		if(aluno == null)
-			return new ResponseEntity<>(aluno, HttpStatus.NOT_FOUND);
+		if(autor == null)
+			return new ResponseEntity<>(autor, HttpStatus.NOT_FOUND);
 		else
-			return new ResponseEntity<>(aluno, HttpStatus.OK);
+			return new ResponseEntity<>(autor, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Aluno> salvar(@RequestBody Aluno aluno){
-		return new ResponseEntity<>(alunoService.salvarAluno(aluno), HttpStatus.CREATED);
+	public ResponseEntity<Autor> salvar(@RequestBody Autor autor){
+		return new ResponseEntity<>(autorService.salvarAutor(autor), HttpStatus.CREATED);
 	}
 	
 	@PutMapping
-	public ResponseEntity<Aluno> atualizar(@RequestBody Aluno aluno){
-		return new ResponseEntity<>(alunoService.atualizarAluno(aluno), HttpStatus.OK);
+	public ResponseEntity<Autor> atualizar(@RequestBody Autor autor){
+		return new ResponseEntity<>(autorService.atualizarAutor(autor), HttpStatus.OK);
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<String> deletarAluno(@RequestBody Aluno aluno){
-		if(Boolean.TRUE.equals(alunoService.deletarAluno(aluno)))
+	public ResponseEntity<String> deletarAutor(@RequestBody Autor autor){
+		if(autorService.deletarAutor(autor))
 			return new ResponseEntity<>("Deletado com sucesso", HttpStatus.OK);
 		else
 			return new  ResponseEntity<>("Não foi possível deletar", HttpStatus.BAD_REQUEST);

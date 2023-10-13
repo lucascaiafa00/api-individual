@@ -18,8 +18,8 @@ public class EmprestimoService {
 		return emprestimoRepository.findAll();
 	}
 	
-	public Emprestimo buscarEmprestimosPorId(Integer id) {
-		return emprestimoRepository.findById(id).get();
+	public Emprestimo buscarEmprestimoPorId(Integer id) {
+		return emprestimoRepository.findById(id).orElse(null);
 	}
 	
 	public Emprestimo salvarEmprestimo(Emprestimo emprestimo) {
@@ -30,7 +30,22 @@ public class EmprestimoService {
 		return emprestimoRepository.save(emprestimo);
 	}
 	
-	public void deletarEmprestimo(Emprestimo emprestimo) {
+	public Boolean deletarEmprestimo(Emprestimo emprestimo) {
+		if(emprestimo == null)
+			return false;
+		
+		Emprestimo emprestimoExistente = buscarEmprestimoPorId(emprestimo.getCodigoEmprestimo());
+		
+		if(emprestimoExistente == null)
+			return false;
+		
 		emprestimoRepository.delete(emprestimo);
+		
+		Emprestimo emprestimoContinuaExistindo = buscarEmprestimoPorId(emprestimo.getCodigoEmprestimo());
+		
+		if(emprestimoContinuaExistindo == null)
+			return true;
+		
+		return false;
 	}
 }

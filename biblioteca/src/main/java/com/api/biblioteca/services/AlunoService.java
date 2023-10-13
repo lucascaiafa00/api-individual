@@ -19,7 +19,7 @@ public class AlunoService {
 	}
 	
 	public Aluno buscarAlunoPorId(Integer id) {
-		return alunoRepository.findById(id).get();
+		return alunoRepository.findById(id).orElse(null);
 	}
 	
 	public Aluno salvarAluno(Aluno aluno) {
@@ -30,7 +30,22 @@ public class AlunoService {
 		return alunoRepository.save(aluno);
 	}
 	
-	public void deletarAluno(Aluno aluno) {
+	public Boolean deletarAluno(Aluno aluno) {
+		if(aluno == null)
+			return false;
+		
+		Aluno alunoExistente = buscarAlunoPorId(aluno.getNumeroMatriculaAluno());
+		
+		if(alunoExistente == null)
+			return false;
+		
 		alunoRepository.delete(aluno);
+		
+		Aluno alunoContinuaExistindo = buscarAlunoPorId(aluno.getNumeroMatriculaAluno());
+		
+		if(alunoContinuaExistindo == null)
+			return true;
+		
+		return false;
 	}
 }

@@ -3,6 +3,9 @@ package com.api.biblioteca.entities;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@JsonIdentityInfo(
+	generator = ObjectIdGenerators.PropertyGenerator.class,
+	property = "codigoEmprestimo",
+	scope=Emprestimo.class
+)
 @Entity
 @Table(name = "emprestimo")
 public class Emprestimo {
@@ -21,16 +29,18 @@ public class Emprestimo {
 	@Column(name = "codigoemprestimo")
 	private Integer codigoEmprestimo;
 	
+//	@JsonBackReference(value = "aluno-mng-ref")
 	@ManyToOne
 	@JoinColumn(name = "numeromatriculaaluno", referencedColumnName = "numeromatriculaaluno")
 	private Aluno aluno;
 	
+//	@JsonBackReference(value = "livro-emprestimo-ref")
 	@ManyToOne
 	@JoinColumn(name = "codigolivro", referencedColumnName = "codigolivro")
 	private Livro livro;
 	
 	@Column(name = "dataemprestimo")
-	private Date dataImprestimo;
+	private Date dataEmprestimo;
 	
 	@Column(name = "dataentrega")
 	private Date dataEntrega;
@@ -62,12 +72,12 @@ public class Emprestimo {
 		this.livro = livro;
 	}
 
-	public Date getDataImprestimo() {
-		return dataImprestimo;
+	public Date getDataEmprestimo() {
+		return dataEmprestimo;
 	}
 
-	public void setDataImprestimo(Date dataImprestimo) {
-		this.dataImprestimo = dataImprestimo;
+	public void setDataEmprestimo(Date dataImprestimo) {
+		this.dataEmprestimo = dataImprestimo;
 	}
 
 	public Date getDataEntrega() {

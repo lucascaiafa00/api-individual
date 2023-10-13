@@ -19,7 +19,7 @@ public class LivroService {
 	}
 	
 	public Livro buscarLivroPorId(Integer id) {
-		return livroRepository.findById(id).get();
+		return livroRepository.findById(id).orElse(null);
 	}
 	
 	public Livro salvarLivro(Livro livro) {
@@ -30,7 +30,22 @@ public class LivroService {
 		return livroRepository.save(livro);
 	}
 	
-	public void deletarLivro(Livro livro) {
+	public Boolean deletarLivro(Livro livro) {
+		if(livro == null)
+			return false;
+		
+		Livro livroExistente = buscarLivroPorId(livro.getCodigoLivro());
+		
+		if(livroExistente == null)
+			return false;
+		
 		livroRepository.delete(livro);
+		
+		Livro livroContinuaExistindo = buscarLivroPorId(livro.getCodigoLivro());
+		
+		if(livroContinuaExistindo == null)
+			return true;
+		
+		return false;
 	}
 }

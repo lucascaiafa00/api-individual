@@ -3,6 +3,9 @@ package com.api.biblioteca.entities;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +16,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@JsonIdentityInfo(
+	generator = ObjectIdGenerators.PropertyGenerator.class,
+	property = "codigoLivro",
+	scope=Livro.class
+)
 @Entity
 @Table(name = "livro")
 public class Livro {
@@ -24,9 +32,6 @@ public class Livro {
 	@Column(name = "nomelivro")
 	private String nomeLivro;
 	
-	@Column(name = "nomeautor")
-	private String nomeAutor;
-	
 	@Column(name = "datalancamento")
 	private Date dataLancamento;
 	
@@ -37,10 +42,21 @@ public class Livro {
 	@JoinColumn(name = "codigoeditora", referencedColumnName = "codigoeditora")
 	private Editora editora;
 	
+	@ManyToOne
+	@JoinColumn(name = "codigo_autor", referencedColumnName = "codigo_autor")
+	private Autor autor;
+	
 	@OneToMany(mappedBy = "livro")
 	private List<Emprestimo> emprestimos;
 
-	
+	public Autor getAutor() {
+		return autor;
+	}
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
+	}
+
 	public List<Emprestimo> getEmprestimos() {
 		return emprestimos;
 	}
@@ -63,14 +79,6 @@ public class Livro {
 
 	public void setNomeLivro(String nomeLivro) {
 		this.nomeLivro = nomeLivro;
-	}
-
-	public String getNomeAutor() {
-		return nomeAutor;
-	}
-
-	public void setNomeAutor(String nomeAutor) {
-		this.nomeAutor = nomeAutor;
 	}
 
 	public Date getDataLancamento() {
